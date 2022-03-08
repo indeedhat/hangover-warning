@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Quotes - Hangover Warning</title>
+
+        <link rel="stylesheet" href="/assets/css/main.css" />
+        <script src="//unpkg.com/alpinejs" defer></script>
+        <script src="/assets/js/main.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body x-data="app">
+        <header>
+            <button class="add" :class="formOpen && 'active'" @click="handleFormToggle">Add Quote</button>
+
+            <div class="title">
+                Hangover Warning Quotes
+            </div>
+        </header>
+        <div class="alert" x-show="alert" x-text="alert" @click="resetPrompts()"></div>
+        <div class="error" x-show="error" x-text="error" @click="resetPrompts()"></div>
+
+        <main>
+            {{ template "content" . }}
+        </main>
+    </body>
+</html>

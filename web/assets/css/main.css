@@ -1,0 +1,155 @@
+@font-face { 
+    font-family: OpenDyslexic; 
+    src: url('/assets/fonts/OpenDyslexic-Regular.otf'); 
+} 
+@font-face { 
+    font-family: OpenDyslexic; 
+    font-weight: bold; 
+    src: url('/assets/fonts/OpenDyslexic-Bold.otf'); 
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+
+    font-family: OpenDyslexic, Arial, Helvetica, sans-serif;
+
+    background: #cccad2;
+}
+
+/* ----- Globals ----- */
+.alert, 
+.error {
+    min-width: 60%;
+    max-width: 90%;
+    width: 60%;
+    text-align: center;
+    margin: 8px auto;
+    padding: 4px 8px;
+    font-weight: bold;
+    border: 3px solid white;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.alert:empty, 
+.error:empty {
+    display:none;
+}
+.alert {
+    background-color: #b1ffaa;
+    border-color: #6af22b;
+}
+.error {
+    background-color: #ffaab6;
+    border-color: red;
+}
+
+.loading {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ----- Header ----- */
+header {
+    background: #28013e;
+    color: white;
+    padding: 4px 8px;
+    margin-bottom: 16px;
+}
+
+header button.add {
+    padding: 4px 16px;
+    border-radius: 20px;
+    background: white;
+    border: none;
+    float: right;
+    margin-top: 2px;
+    font-weight: bold;
+    cursor: pointer;
+}
+header button.add.active {
+    color: white;
+    background:#045297;
+}
+
+/* ----- Form ----- */
+form {
+    display: block;
+    min-width: 50%;
+    max-width: 90%;
+    width: 500px;
+    margin: 8px auto;
+    padding:8px;
+
+    background: #bfc5df;
+    border: none;
+    border-radius: 5px;
+
+}
+label {
+    margin:0 8px;
+}
+input, 
+textarea, 
+select {
+    display: block;
+    width: calc(100% - 16px);
+    margin: 0 8px;
+    padding: 4px 8px;
+    border: none;
+    border-bottom: 1px solid black;
+    border-radius: none;
+    background: white;
+    font-family: OpenDyslexic, Arial, Helvetica, sans-serif;
+}
+input:focus, 
+textarea:focus, 
+select:focus {
+    user-select: none;
+    outline: none;
+    border-bottom: 2px solid purple;
+}
+input[type=submit] {
+    width: auto;
+    margin-left: auto;
+    margin-top: 16px;
+
+    padding: 4px 16px;
+    border-radius: 20px;
+    border: none;
+    font-weight: bold;
+
+    color: white;
+    background:#045297;
+}
+
+/* ----- Quotes ----- */
+article {
+    min-width: 50%;
+    max-width: 90%;
+    width: 500px;
+    margin: 8px auto;
+    padding: 4px 8px;
+
+    background: white;
+    border: none;
+    border-radius: 5px;
+}
+
+article .person {
+    font-weight: bold;
+    text-align: right;
+}
+
+article .date {
+    color: gray;
+    float:right;
+}
+
+article p {
+    margin-bottom: 0;
+}

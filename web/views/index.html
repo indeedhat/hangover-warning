@@ -1,0 +1,35 @@
+{{ define "content" }}
+    <form x-show="formOpen" @submit.prevent="handleSubmitForm" style="display: none">
+        <label>Quote *</label>
+        <textarea name="text" rows="3" x-model="form.text"></textarea>
+
+        <label>Idiot *</label>
+        <select name="person" x-model="form.person">
+            <option value="" selected disabled>Select an Idiot</option>
+            <option value="Jon">Jon</option>
+            <option value="Karl">Karl</option>
+            <option value="Kt">Kt</option>
+            <option value="Matt">Matt</option>
+            <option value="Rich">Rich</option>
+            <option value="Steph">Steph</option>
+        </select>
+
+        <label>Date</label>
+        <input type="date" name="date" x-model="form.date"/>
+
+        <input type="submit" value="Add Quote" />
+    </form>
+
+    <div class="loading" x-show="loading" style="display:none;">Loading...</div>
+
+    <section class="quotes" x-show="!loading">
+        <div class="error" x-show="!quoteList.length">There are no quotes to show</div>
+        <template x-for="quote in quoteList">
+            <article class="card">
+                <div class="date" x-text="quote.date || 'Unknown'"></div>
+                <p x-text='`"${quote.text}"`'></p>
+                <div class="person" x-text="'- ' + quote.person"></div>
+            </article>    
+        </template>
+    </section>
+{{ end }}
