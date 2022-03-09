@@ -18,7 +18,7 @@
         <template x-for="quote in filteredList">
             <article class="card" @click="handleFormToggle(quote)">
                 <div class="date" x-text="quote.date ? formatDate(quote.date) : 'Unknown'"></div>
-                <p x-text='`"${quote.text}"`'></p>
+                <p x-html='`"${formatText(quote.text)}"`'></p>
                 <div class="person" x-text="'- ' + quote.person"></div>
             </article>    
         </template>

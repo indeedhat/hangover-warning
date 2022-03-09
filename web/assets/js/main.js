@@ -121,6 +121,9 @@ window.addEventListener("alpine:init", function() {
 
         formatDate(date) {
             return new Date(date).toDateString();
+        },
+        formatText(text) {
+            return text.replaceAll(/\r?\n/g, "<br />");
         }
     }))
 });
