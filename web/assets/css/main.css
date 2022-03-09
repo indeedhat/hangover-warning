@@ -129,7 +129,6 @@ select {
 input:focus, 
 textarea:focus, 
 select:focus {
-    user-select: none;
     outline: none;
     border-bottom: 2px solid purple;
 }
