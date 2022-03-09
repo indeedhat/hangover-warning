@@ -17,11 +17,19 @@ window.addEventListener("alpine:init", function() {
 
         formOpen: false,
         form: emptyForm(),
-        handleFormToggle() {
+        handleFormToggle(data) {
+            this.form = data || emptyForm();
             this.formOpen = !this.formOpen;
         },
         handleSubmitForm() {
-            fetch("/api/quotes", {method: "POST", body: formData(this.form)})
+            let url = "/api/quotes"; 
+            let method = "POST";
+            if (this.form.id) {
+                url += `/${this.form.id}`;
+                method = "PUT";
+            }
+
+            fetch(url, {method, body: formData(this.form)})
                 .then(r => r.json())
                 .then(j => {
                     if (!j.outcome) {
@@ -29,12 +37,33 @@ window.addEventListener("alpine:init", function() {
                         return
                     }
                     
-                    this.triggerAlert("Quote Added");
+                    this.triggerAlert(this.form.id ? "Quote Updated" : "Quote Added");
                     this.formOpen = false;
                     this.form = emptyForm();
                     this.getQuotes();
                 })
                 .catch(e => this.triggerError(`Unknown error: ${e.message}`))
+        },
+        async handleDelete() {
+            if (!this.form.id) {
+                return;
+            }
+
+            if (!confirm("Are you sure you want to delete this quote?")) {
+                return;
+            }
+
+            let response = await fetch(`/api/quotes/${this.form.id}`, {method: "DELETE"})
+                .then(r => r.json());
+
+            if (!response.outcome) {
+                this.triggerError("Delete Failed");
+                return;
+            }
+
+            this.triggerAlert("Quote Deleted");
+            this.getQuotes();
+            this.handleFormToggle();
         },
 
         error: "",
@@ -68,9 +97,30 @@ window.addEventListener("alpine:init", function() {
                 .then(r => r.json())
                 .then(j => {
                     this.quoteList = j.quotes;
+                    this.applyFilters();
                     this.loading = false;
                 })
                 .catch(() => this.triggerError("Failed to get quote list"))
+        },
+
+        filters: { idiot: "" },
+        filteredList: [],
+        applyFilters() {
+            if (!this.filters.idiot) {
+                this.filteredList = this.quoteList;
+                return;
+            }
+
+            this.filteredList = [];
+            for (let i in this.quoteList) {
+                if (this.quoteList[i].person == this.filters.idiot) {
+                    this.filteredList.push(this.quoteList[i]);
+                }
+            }
+        },
+
+        formatDate(date) {
+            return new Date(date).toDateString();
         }
     }))
 });

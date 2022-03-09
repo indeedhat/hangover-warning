@@ -1,11 +1,7 @@
 {{ define "content" }}
-    <form x-show="formOpen" @submit.prevent="handleSubmitForm" style="display: none">
-        <label>Quote *</label>
-        <textarea name="text" rows="3" x-model="form.text"></textarea>
-
-        <label>Idiot *</label>
-        <select name="person" x-model="form.person">
-            <option value="" selected disabled>Select an Idiot</option>
+    <section id="filters">
+        <select x-model="filters.idiot" @change="applyFilters">
+            <option value="" selected>Show all idiots</option>
             <option value="Jon">Jon</option>
             <option value="Karl">Karl</option>
             <option value="Kt">Kt</option>
@@ -14,23 +10,46 @@
             <option value="Steph">Steph</option>
             <option value="Some Idiot">Some Idiot</option>
         </select>
-
-        <label>Date</label>
-        <input type="date" name="date" x-model="form.date"/>
-
-        <input type="submit" value="Add Quote" />
-    </form>
+    </section>
 
     <div class="loading" x-show="loading" style="display:none;">Loading...</div>
-
     <section class="quotes" x-show="!loading">
-        <div class="error" x-show="!quoteList.length">There are no quotes to show</div>
-        <template x-for="quote in quoteList">
-            <article class="card">
-                <div class="date" x-text="quote.date || 'Unknown'"></div>
+        <div class="error" x-show="!filteredList.length">There are no quotes to show</div>
+        <template x-for="quote in filteredList">
+            <article class="card" @click="handleFormToggle(quote)">
+                <div class="date" x-text="quote.date ? formatDate(quote.date) : 'Unknown'"></div>
                 <p x-text='`"${quote.text}"`'></p>
                 <div class="person" x-text="'- ' + quote.person"></div>
             </article>    
         </template>
+    </section>
+
+    <section id="modal" x-show="formOpen" @click="handleFormToggle" style="display: none;">
+        <form @submit.prevent="handleSubmitForm" @click.stop="">
+            <input type="hidden" x-model="form.id" />
+
+            <label>Quote *</label>
+            <textarea name="text" rows="3" x-model="form.text"></textarea>
+
+            <label>Idiot *</label>
+            <select name="person" x-model="form.person">
+                <option value="" selected disabled>Select an Idiot</option>
+                <option value="Jon">Jon</option>
+                <option value="Karl">Karl</option>
+                <option value="Kt">Kt</option>
+                <option value="Matt">Matt</option>
+                <option value="Rich">Rich</option>
+                <option value="Steph">Steph</option>
+                <option value="Some Idiot">Some Idiot</option>
+            </select>
+
+            <label>Date</label>
+            <input type="date" name="date" x-model="form.date"/>
+
+            <div class="clearfix">
+                <input type="button" value="delete" id="delete" @click="handleDelete" x-show="form.id"/>
+                <input type="submit" :value="form.id ? 'Update Quote' : 'Add Quote'" />
+            </div>
+        </form>
     </section>
 {{ end }}

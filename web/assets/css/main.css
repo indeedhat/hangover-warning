@@ -21,6 +21,12 @@ html, body {
     background: #cccad2;
 }
 
+.clearfix:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
 /* ----- Globals ----- */
 .alert, 
 .error {
@@ -77,7 +83,21 @@ header button.add.active {
 }
 
 /* ----- Form ----- */
+section#modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    background: rgba(255, 255, 255, 0.6);
+}
 form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     display: block;
     min-width: 50%;
     max-width: 90%;
@@ -115,8 +135,8 @@ select:focus {
 }
 input[type=submit] {
     width: auto;
-    margin-left: auto;
     margin-top: 16px;
+    float:right;
 
     padding: 4px 16px;
     border-radius: 20px;
@@ -125,6 +145,23 @@ input[type=submit] {
 
     color: white;
     background:#045297;
+
+    cursor: pointer;
+}
+input#delete {
+    width: auto;
+    margin-top: 16px;
+    float: left;
+
+    padding: 4px 16px;
+    border-radius: 20px;
+    border: none;
+    font-weight: bold;
+
+    color: white;
+    background:#ec1919;
+
+    cursor: pointer;
 }
 
 /* ----- Quotes ----- */
@@ -138,6 +175,8 @@ article {
     background: white;
     border: none;
     border-radius: 5px;
+
+    cursor: pointer;
 }
 
 article .person {
@@ -146,10 +185,10 @@ article .person {
 }
 
 article .date {
+    text-align:right;
     color: gray;
-    float:right;
 }
 
 article p {
-    margin-bottom: 0;
+    margin: 0;
 }

@@ -27,7 +27,7 @@ func (quo Quotes) routes(router *gin.Engine) {
 	{
 		lists.GET("", quo.List())
 		lists.POST("", quo.Create())
-		lists.PATCH("/:id", quo.Update())
+		lists.PUT("/:id", quo.Update())
 		lists.DELETE("/:id", quo.Delete())
 	}
 }
@@ -63,7 +63,7 @@ func (quo Quotes) Create() gin.HandlerFunc {
 			return
 		}
 
-		if list := store.CreateQuote(quo.db, input.Text, input.Person, parsHtmlLocalDateTime(input.Date)); list == nil {
+		if list := store.CreateQuote(quo.db, input.Text, input.Person, &input.Date); list == nil {
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, errRequestFailed)
 			return
 		}
@@ -75,7 +75,9 @@ func (quo Quotes) Create() gin.HandlerFunc {
 // Update the text on an quory
 func (quo Quotes) Update() gin.HandlerFunc {
 	type formInput struct {
-		Text string `form:"text" binding:"required"`
+		Text   string `form:"text" binding:"required"`
+		Person string `form:"person" binding:"required"`
+		Date   string `form:"date"`
 	}
 
 	return func(ctx *gin.Context) {
@@ -96,6 +98,8 @@ func (quo Quotes) Update() gin.HandlerFunc {
 		}
 
 		existing.Text = input.Text
+		existing.Person = input.Person
+		existing.Date = &input.Date
 		if tx := quo.db.Save(existing); tx.Error != nil {
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, errRequestFailed)
 			return
