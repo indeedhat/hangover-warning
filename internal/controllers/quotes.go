@@ -1,7 +1,14 @@
 package controllers
 
 import (
+	"errors"
+	"fmt"
+	"log"
+	"mime/multipart"
 	"net/http"
+	"os"
+	"path"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/indeedhat/hangover-warning/internal/store"
@@ -53,17 +60,68 @@ func (quo Quotes) Create() gin.HandlerFunc {
 		Date   string `form:"date"`
 	}
 
+	var (
+		errBadFile = gin.H{
+			"outcome": false,
+			"message": "File must be jpeg or png",
+		}
+
+		getMimeType = func(file *multipart.FileHeader) string {
+			fh, err := file.Open()
+			if err != nil {
+				return ""
+			}
+
+			buff := make([]byte, 512)
+			_, err = fh.Read(buff)
+			if err != nil {
+				return ""
+			}
+
+			return http.DetectContentType(buff)
+		}
+	)
+
 	return func(ctx *gin.Context) {
-		var (
-			input formInput
-		)
+		var input formInput
 
 		if err := ctx.ShouldBind(&input); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, errBadInput)
 			return
 		}
 
-		if list := store.CreateQuote(quo.db, input.Text, input.Person, &input.Date); list == nil {
+		file, err := ctx.FormFile("image")
+		if err != nil {
+			mimeType := getMimeType(file)
+			if mimeType != "image/jpeg" && mimeType != "image/x-png" {
+				ctx.AbortWithStatusJSON(http.StatusBadRequest, errBadFile)
+				return
+			}
+		}
+
+		err = quo.db.Transaction(func(tx *gorm.DB) error {
+			quote := store.CreateQuote(tx, input.Text, input.Person, &input.Date)
+			if quote == nil {
+				return errors.New("")
+			}
+
+			cwd, err := os.Getwd()
+			if err != nil {
+				return err
+			}
+
+			saveName := fmt.Sprintf("/uploads/%d%s", quote.ID, filepath.Ext(file.Filename))
+			err = ctx.SaveUploadedFile(file, path.Join(cwd, "web", saveName))
+			if err != nil {
+				return err
+			}
+
+			quote.Image = &saveName
+			return tx.Save(quote).Error
+		})
+
+		if err != nil {
+			log.Print(err)
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, errRequestFailed)
 			return
 		}

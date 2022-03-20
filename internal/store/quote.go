@@ -9,6 +9,7 @@ type Quote struct {
 	Text   string  `gorm:"size:255" json:"text"`
 	Person string  `gorm:"size:10,index" json:"person"`
 	Date   *string `gorm:"size:15" json:"date"`
+	Image  *string `gorm:"size:16" json:"image"`
 }
 
 // CreateQuote on a TODO list

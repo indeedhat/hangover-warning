@@ -29,6 +29,7 @@ func NewViews(router *gin.Engine, db *gorm.DB) Views {
 func (vew Views) routes(router *gin.Engine) {
 	static := router.Group("/", gzip.Gzip(gzip.DefaultCompression))
 	static.Static("/assets", "./web/assets")
+	static.Static("/uploads", "./web/uploads")
 
 	viewsConfig := goview.DefaultConfig
 	viewsConfig.Root = "./web/views"

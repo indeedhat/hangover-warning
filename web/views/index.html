@@ -18,6 +18,11 @@
         <template x-for="quote in filteredList">
             <article class="card" @click="handleFormToggle(quote)">
                 <div class="date" x-text="quote.date ? formatDate(quote.date) : 'Unknown'"></div>
+                <template x-if="quote.image">
+                    <a :href="quote.image" target="__blank">
+                        <img :src="quote.image" />
+                    </a>
+                </template>
                 <p x-html='`"${formatText(quote.text)}"`'></p>
                 <div class="person" x-text="'- ' + quote.person"></div>
             </article>    
@@ -30,6 +35,9 @@
 
             <label>Quote *</label>
             <textarea name="text" rows="3" x-model="form.text"></textarea>
+
+            <label x-show="!form.id">Image<label>
+            <input x-show="!form.id" type="file" id="file" x-model="form.image"/>
 
             <label>Idiot *</label>
             <select name="person" x-model="form.person">

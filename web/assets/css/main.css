@@ -178,6 +178,10 @@ article {
     cursor: pointer;
 }
 
+article img {
+    max-width: 100%;
+}
+
 article .person {
     font-weight: bold;
     text-align: right;

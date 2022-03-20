@@ -29,6 +29,11 @@ window.addEventListener("alpine:init", function() {
                 method = "PUT";
             }
 
+            let files = document.getElementById("file").files;
+            if (!this.form.id && files.length) {
+                this.form.image = files[0];
+            }
+
             fetch(url, {method, body: formData(this.form)})
                 .then(r => r.json())
                 .then(j => {
