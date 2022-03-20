@@ -1,5 +1,5 @@
 {{ define "content" }}
-    <section id="filters">
+    <div class="row" x-show="!randomMode">
         <select x-model="filters.idiot" @change="applyFilters">
             <option value="" selected>Show all idiots</option>
             <option value="Jon">Jon</option>
@@ -10,7 +10,12 @@
             <option value="Steph">Steph</option>
             <option value="Some Idiot">Some Idiot</option>
         </select>
-    </section>
+        <button @click="randomQuote()">Random</button>
+    </div>
+    <div class="row" x-show="randomMode">
+        <button @click="viewAll()">View All</button>
+        <button @click="randomQuote()">Random</button>
+    </div>
 
     <div class="loading" x-show="loading" style="display:none;">Loading...</div>
     <section class="quotes" x-show="!loading">
@@ -36,7 +41,7 @@
             <label>Quote *</label>
             <textarea name="text" rows="3" x-model="form.text"></textarea>
 
-            <label x-show="!form.id">Image<label>
+            <label x-show="!form.id">Image</label>
             <input x-show="!form.id" type="file" id="file" x-model="form.image"/>
 
             <label>Idiot *</label>

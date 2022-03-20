@@ -67,7 +67,7 @@ header {
     margin-bottom: 16px;
 }
 
-header button.add {
+button {
     padding: 4px 16px;
     border-radius: 20px;
     background: white;
@@ -194,4 +194,14 @@ article .date {
 
 article p {
     margin: 0;
+}
+
+div.row {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 0 8px;
+}
+
+div.row > * {
+    min-width: 25%;
 }

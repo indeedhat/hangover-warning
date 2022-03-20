@@ -83,7 +83,10 @@ func (quo Quotes) Create() gin.HandlerFunc {
 	)
 
 	return func(ctx *gin.Context) {
-		var input formInput
+		var (
+			input         formInput
+			pendingUpload bool
+		)
 
 		if err := ctx.ShouldBind(&input); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, errBadInput)
@@ -91,18 +94,24 @@ func (quo Quotes) Create() gin.HandlerFunc {
 		}
 
 		file, err := ctx.FormFile("image")
-		if err != nil {
+		if err == nil {
 			mimeType := getMimeType(file)
-			if mimeType != "image/jpeg" && mimeType != "image/x-png" {
+			if mimeType != "image/jpeg" && mimeType != "image/x-png" && mimeType != "image/png" {
 				ctx.AbortWithStatusJSON(http.StatusBadRequest, errBadFile)
 				return
 			}
+
+			pendingUpload = true
 		}
 
 		err = quo.db.Transaction(func(tx *gorm.DB) error {
 			quote := store.CreateQuote(tx, input.Text, input.Person, &input.Date)
 			if quote == nil {
 				return errors.New("")
+			}
+
+			if !pendingUpload {
+				return nil
 			}
 
 			cwd, err := os.Getwd()

@@ -124,6 +124,16 @@ window.addEventListener("alpine:init", function() {
             }
         },
 
+        randomMode: false,
+        randomQuote() {
+            this.randomMode = true;
+            this.filteredList = [this.quoteList[Math.floor(Math.random() * this.quoteList.length)]];
+        },
+        viewAll() {
+            this.randomMode = false;
+            this.filteredList = [...this.quoteList];
+        },
+
         formatDate(date) {
             return new Date(date).toDateString();
         },
